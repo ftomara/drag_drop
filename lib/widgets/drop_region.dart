@@ -1,4 +1,6 @@
+import 'package:drag_drop/model/raw_matrial.dart';
 import 'package:drag_drop/widgets/dotted_bg.dart';
+import 'package:drag_drop/widgets/raws_list.dart';
 import 'package:flutter/material.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
@@ -10,7 +12,12 @@ class MyDropRegion extends StatefulWidget {
 class _MyDropRegionState extends State<MyDropRegion> {
   // List to hold dropped items (widgets and their positions)
   List<_DraggableItemData> droppedItems = [];
-
+  final List<RawMatrial> _rawMatrials = [
+    RawMatrial(name: 'Aluminum', code: '54321'),
+    RawMatrial(name: 'Copper', code: '768493'),
+    RawMatrial(name: 'Steel', code: '93274'),
+    RawMatrial(name: 'Titanium', code: '373499'),
+  ];
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -58,6 +65,11 @@ class _MyDropRegionState extends State<MyDropRegion> {
             CustomPaint(
               painter: DottedPainter(),
               size: Size(width, height),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 100,left: 50),
+              width: 200,
+              child: RawsList(list: _rawMatrials),
             ),
             for (var item in droppedItems)
               Positioned(
