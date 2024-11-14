@@ -23,7 +23,7 @@ class MyDraggableWidget extends StatelessWidget {
       child: DraggableWidget(
         
         child: Container(
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.symmetric(horizontal: 48 , vertical: 12),
           margin: const EdgeInsets.symmetric(vertical: 10 , horizontal: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),

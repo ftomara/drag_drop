@@ -1,4 +1,4 @@
-import 'package:drag_drop/widgets/overlayed.dart';
+import 'package:drag_drop/widgets/dotted_bg.dart';
 import 'package:flutter/material.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
@@ -8,11 +8,14 @@ class MyDropRegion extends StatefulWidget {
 }
 
 class _MyDropRegionState extends State<MyDropRegion> {
-  // List to hold dropped items (widgets)
-  List<Widget> droppedItems = [];
-  List<Offset> dropPositions = [];
+  // List to hold dropped items (widgets and their positions)
+  List<_DraggableItemData> droppedItems = [];
+
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     return DropRegion(
       formats: Formats.standardFormats,
       hitTestBehavior: HitTestBehavior.opaque,
@@ -33,29 +36,12 @@ class _MyDropRegionState extends State<MyDropRegion> {
 
             if (value != null) {
               setState(() {
-                // Add the dropped container to the list of dropped items
                 droppedItems.add(
-                  Overlayed(
-                    child: Container(
-                      // padding: const EdgeInsets.all(15.0),
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 300, horizontal: 450),
-                      child: Container(
-                        width: 100,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.black, width: 2),
-                          color: Colors.transparent,
-                        ),
-                        child: Center(
-                            child: Text(value,
-                                style: const TextStyle(color: Colors.black))),
-                      ),
-                    ),
+                  _DraggableItemData(
+                    position: localPosition,
+                    value: value,
                   ),
                 );
-                dropPositions.add(localPosition);
               });
             }
           }, onError: (error) {
@@ -64,13 +50,68 @@ class _MyDropRegionState extends State<MyDropRegion> {
         }
       },
       child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+        width: width,
+        height: height,
         color: Colors.grey[200],
         child: Stack(
           children: [
-            for (int i = 0; i < droppedItems.length; i++) droppedItems[i],
+            CustomPaint(
+              painter: DottedPainter(),
+              size: Size(width, height),
+            ),
+            for (var item in droppedItems)
+              Positioned(
+                left: item.position.dx,
+                top: item.position.dy,
+                child: _DraggableItem(
+                  data: item,
+                  onPositionChanged: (newPosition) {
+                    setState(() {
+                      item.position = newPosition;
+                    });
+                  },
+                ),
+              ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DraggableItemData {
+  Offset position;
+  final String value;
+
+  _DraggableItemData({required this.position, required this.value});
+}
+
+class _DraggableItem extends StatelessWidget {
+  final _DraggableItemData data;
+  final Function(Offset) onPositionChanged;
+
+  const _DraggableItem({
+    required this.data,
+    required this.onPositionChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onPanUpdate: (details) {
+        // Update position based on drag
+        onPositionChanged(data.position + details.delta);
+      },
+      child: Container(
+        width: 100,
+        height: 50,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.black, width: 2),
+          color: Colors.transparent,
+        ),
+        child: Center(
+          child: Text(data.value, style: const TextStyle(color: Colors.black)),
         ),
       ),
     );
