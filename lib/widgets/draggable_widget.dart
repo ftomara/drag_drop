@@ -21,6 +21,7 @@ class MyDraggableWidget extends StatelessWidget {
       },
       allowedOperations: () => [DropOperation.copy],
       child: DraggableWidget(
+        
         child: Container(
           padding: const EdgeInsets.all(15.0),
           margin: const EdgeInsets.symmetric(vertical: 10 , horizontal: 10),

@@ -1,3 +1,4 @@
+import 'package:drag_drop/widgets/overlayed.dart';
 import 'package:flutter/material.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
@@ -34,17 +35,24 @@ class _MyDropRegionState extends State<MyDropRegion> {
               setState(() {
                 // Add the dropped container to the list of dropped items
                 droppedItems.add(
-                  Container(
-                    padding: const EdgeInsets.all(15.0),
-                    margin: const EdgeInsets.symmetric(vertical: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.black, width: 2),
-                      color: Colors.transparent,
+                  Overlayed(
+                    child: Container(
+                      // padding: const EdgeInsets.all(15.0),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 300, horizontal: 450),
+                      child: Container(
+                        width: 100,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.black, width: 2),
+                          color: Colors.transparent,
+                        ),
+                        child: Center(
+                            child: Text(value,
+                                style: const TextStyle(color: Colors.black))),
+                      ),
                     ),
-                    child: Center(
-                        child: Text(value,
-                            style: const TextStyle(color: Colors.black))),
                   ),
                 );
                 dropPositions.add(localPosition);
@@ -56,18 +64,12 @@ class _MyDropRegionState extends State<MyDropRegion> {
         }
       },
       child: Container(
-        width: MediaQuery.of(context).size.width, 
+        width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.all(15.0),
         color: Colors.grey[200],
         child: Stack(
           children: [
-            for (int i = 0; i < droppedItems.length; i++)
-              Positioned(
-                left: dropPositions[i].dx,
-                top: dropPositions[i].dy,
-                child: droppedItems[i],
-              ),
+            for (int i = 0; i < droppedItems.length; i++) droppedItems[i],
           ],
         ),
       ),

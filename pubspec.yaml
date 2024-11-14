@@ -38,6 +38,7 @@ dependencies:
   super_drag_and_drop: ^0.8.24
   graphite: ^1.2.0
   flutter_flow_chart: ^3.2.1
+  matrix_gesture_detector: ^0.2.0-nullsafety.1
 
 dev_dependencies:
   flutter_test:
