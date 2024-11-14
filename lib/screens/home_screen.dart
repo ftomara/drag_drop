@@ -1,40 +1,44 @@
+import 'package:drag_drop/model/machine.dart';
 import 'package:flutter/material.dart';
 import '../widgets/draggable_widget.dart';
 import '../widgets/drop_region.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   // List to hold draggable containers
-  List<String> containers = List.generate(5, (index) => 'Container ${index + 1}');
+  final List<Machine> _machines = [
+    Machine(name: 'Cutting'),
+    Machine(name: 'Drilling'),
+    Machine(name: 'Welding'),
+    Machine(name: 'Grinding'),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Drag and Drop Example'),
-      ),
+      backgroundColor: Colors.grey[200],
       body: Column(
         children: [
-          Expanded(
-            child: Center(
-              child: Column(
-                children: containers.map((container) {
-                  return MyDraggableWidget(
-                    data: container,  // Pass the container data
-                  );
-                }).toList(),
-              ),
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: _machines.map((machine) {
+                return MyDraggableWidget(
+                  data: machine, // Pass the container data
+                );
+              }).toList(),
             ),
           ),
-          Divider(),
+          const Divider(),
+          // Wrap MyDropRegion in a Flex widget like Column or Row
           Expanded(
-            child: Center(
-              child: MyDropRegion(),
-            ),
+            child: MyDropRegion(),
           ),
         ],
       ),

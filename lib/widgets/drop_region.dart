@@ -9,7 +9,7 @@ class MyDropRegion extends StatefulWidget {
 class _MyDropRegionState extends State<MyDropRegion> {
   // List to hold dropped items (widgets)
   List<Widget> droppedItems = [];
-
+  List<Offset> dropPositions = [];
   @override
   Widget build(BuildContext context) {
     return DropRegion(
@@ -27,17 +27,27 @@ class _MyDropRegionState extends State<MyDropRegion> {
         final reader = item.dataReader!;
         if (reader.canProvide(Formats.plainText)) {
           reader.getValue<String>(Formats.plainText, (value) {
+            final RenderBox renderBox = context.findRenderObject() as RenderBox;
+            final localPosition = renderBox.globalToLocal(event.position.local);
+
             if (value != null) {
               setState(() {
                 // Add the dropped container to the list of dropped items
                 droppedItems.add(
                   Container(
-                    padding: EdgeInsets.all(15.0),
-                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    color: Colors.blueAccent,
-                    child: Center(child: Text(value, style: TextStyle(color: Colors.white))),
+                    padding: const EdgeInsets.all(15.0),
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.black, width: 2),
+                      color: Colors.transparent,
+                    ),
+                    child: Center(
+                        child: Text(value,
+                            style: const TextStyle(color: Colors.black))),
                   ),
                 );
+                dropPositions.add(localPosition);
               });
             }
           }, onError: (error) {
@@ -46,13 +56,19 @@ class _MyDropRegionState extends State<MyDropRegion> {
         }
       },
       child: Container(
+        width: MediaQuery.of(context).size.width, 
+        height: MediaQuery.of(context).size.height,
         padding: EdgeInsets.all(15.0),
         color: Colors.grey[200],
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,  // Allow horizontal scrolling
-          child: Row(
-            children: droppedItems,  // Display dropped items in a row
-          ),
+        child: Stack(
+          children: [
+            for (int i = 0; i < droppedItems.length; i++)
+              Positioned(
+                left: dropPositions[i].dx,
+                top: dropPositions[i].dy,
+                child: droppedItems[i],
+              ),
+          ],
         ),
       ),
     );

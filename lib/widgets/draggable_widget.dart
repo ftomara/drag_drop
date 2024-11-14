@@ -1,8 +1,11 @@
+import 'dart:async';
+
+import 'package:drag_drop/model/machine.dart';
 import 'package:flutter/material.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
 class MyDraggableWidget extends StatelessWidget {
-  final String data;  // Data for the draggable item
+  final Machine data;  
 
   MyDraggableWidget({required this.data});
 
@@ -11,18 +14,23 @@ class MyDraggableWidget extends StatelessWidget {
     return DragItemWidget(
       dragItemProvider: (request) async {
         final item = DragItem(
-          localData: {'data': data},  // Store the data inside the drag item
+          localData: {'data': data},  
         );
-        item.add(Formats.plainText(data));  // Optionally add more data
+        item.add(Formats.plainText(data.name));  
         return item;
       },
       allowedOperations: () => [DropOperation.copy],
       child: DraggableWidget(
         child: Container(
-          padding: EdgeInsets.all(15.0),
-          margin: EdgeInsets.symmetric(vertical: 10),
-          color: Colors.blueAccent,
-          child: Center(child: Text(data, style: TextStyle(color: Colors.white))),
+          padding: const EdgeInsets.all(15.0),
+          margin: const EdgeInsets.symmetric(vertical: 10 , horizontal: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.black , width: 2),
+            color: Colors.transparent,
+
+          ),
+          child: Center(child: Text(data.name, style: const TextStyle(color: Colors.black))),
         ),
       ),
     );
