@@ -1,7 +1,11 @@
 class Machine {
-  String name ='';
-  List<String>? setups = [];
-  int number = 1;
+  final String name;
+  int? selectedSetup; // Optional setup angle
+  List<String>? setups;
+  Machine({required this.name, this.selectedSetup , this.setups});
 
-Machine({required this.name , this.setups , this.number=1});
+  // A getter to get the display name based on setup
+  String get displayName {
+    return selectedSetup != null ? '$name (${selectedSetup}°)' : name;
+  }
 }

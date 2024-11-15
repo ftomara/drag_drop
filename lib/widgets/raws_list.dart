@@ -1,6 +1,8 @@
-import 'package:drag_drop/model/raw_matrial.dart';
-import 'package:drag_drop/widgets/custom_container.dart';
+
 import 'package:flutter/material.dart';
+
+import '../model/raw_matrial.dart';
+import 'custom_container.dart';
 
 class RawsList extends StatelessWidget {
   const RawsList({super.key, required this.list});

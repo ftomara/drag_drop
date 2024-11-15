@@ -1,8 +1,10 @@
-import 'package:drag_drop/model/raw_matrial.dart';
-import 'package:drag_drop/widgets/dotted_bg.dart';
-import 'package:drag_drop/widgets/raws_list.dart';
 import 'package:flutter/material.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
+
+import '../model/raw_matrial.dart';
+import 'dotted_bg.dart';
+import 'draggable_item.dart';
+import 'raws_list.dart';
 
 class MyDropRegion extends StatefulWidget {
   @override
@@ -11,13 +13,70 @@ class MyDropRegion extends StatefulWidget {
 
 class _MyDropRegionState extends State<MyDropRegion> {
   // List to hold dropped items (widgets and their positions)
-  List<_DraggableItemData> droppedItems = [];
+  List<DraggableItemData> droppedItems = [];
   final List<RawMatrial> _rawMatrials = [
     RawMatrial(name: 'Aluminum', code: '54321'),
     RawMatrial(name: 'Copper', code: '768493'),
     RawMatrial(name: 'Steel', code: '93274'),
     RawMatrial(name: 'Titanium', code: '373499'),
   ];
+  Future<void> showAreYouSureDialog(DraggableItemData item) async {
+    bool? shouldDelete = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF3E3E3E),
+          title: const Text(
+            'Delete Machine?',
+            style: TextStyle(color: Colors.white),
+          ),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true); // Confirm deletion
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 189, 20, 8),
+                ),
+                child: const Text(
+                  "Yes",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              const SizedBox(width: 16),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false); // Cancel deletion
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 36, 123, 5),
+                ),
+                child: const Text(
+                  "No",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (shouldDelete == true) {
+      setState(() {
+        droppedItems.remove(item);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -44,7 +103,7 @@ class _MyDropRegionState extends State<MyDropRegion> {
             if (value != null) {
               setState(() {
                 droppedItems.add(
-                  _DraggableItemData(
+                  DraggableItemData(
                     position: localPosition,
                     value: value,
                   ),
@@ -67,7 +126,7 @@ class _MyDropRegionState extends State<MyDropRegion> {
               size: Size(width, height),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 100,left: 50),
+              margin: const EdgeInsets.only(top: 100, left: 50),
               width: 200,
               child: RawsList(list: _rawMatrials),
             ),
@@ -75,55 +134,17 @@ class _MyDropRegionState extends State<MyDropRegion> {
               Positioned(
                 left: item.position.dx,
                 top: item.position.dy,
-                child: _DraggableItem(
+                child: DraggableItem(
                   data: item,
                   onPositionChanged: (newPosition) {
                     setState(() {
                       item.position = newPosition;
                     });
                   },
+                  onDelete: () => showAreYouSureDialog(item),
                 ),
               ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _DraggableItemData {
-  Offset position;
-  final String value;
-
-  _DraggableItemData({required this.position, required this.value});
-}
-
-class _DraggableItem extends StatelessWidget {
-  final _DraggableItemData data;
-  final Function(Offset) onPositionChanged;
-
-  const _DraggableItem({
-    required this.data,
-    required this.onPositionChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onPanUpdate: (details) {
-        // Update position based on drag
-        onPositionChanged(data.position + details.delta);
-      },
-      child: Container(
-        width: 100,
-        height: 50,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black, width: 2),
-          color: Colors.transparent,
-        ),
-        child: Center(
-          child: Text(data.value, style: const TextStyle(color: Colors.black)),
         ),
       ),
     );
