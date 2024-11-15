@@ -8,6 +8,8 @@ import 'draggable_item.dart';
 import 'raws_list.dart';
 
 class MyDropRegion extends StatefulWidget {
+  const MyDropRegion({super.key});
+
   @override
   _MyDropRegionState createState() => _MyDropRegionState();
 }

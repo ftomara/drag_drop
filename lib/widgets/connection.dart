@@ -26,8 +26,8 @@ class LinePainter extends CustomPainter {
       final endItem = items.firstWhere((item) => item.id == connection.endId);
 
       canvas.drawLine(
-        startItem.position + Offset(100, 25), // Center of the draggable item
-        endItem.position + Offset(0, 25), // Center of the draggable item
+        startItem.position + const Offset(100, 25), // Center of the draggable item
+        endItem.position + const Offset(0, 25), // Center of the draggable item
         paint,
       );
     }

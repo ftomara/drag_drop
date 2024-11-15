@@ -8,7 +8,7 @@ import 'custom_container.dart';
 class MyDraggableWidget extends StatelessWidget {
   final Machine data;
 
-  MyDraggableWidget({required this.data});
+  const MyDraggableWidget({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {

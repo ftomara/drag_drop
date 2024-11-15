@@ -6,6 +6,6 @@ class Machine {
 
   // A getter to get the display name based on setup
   String get displayName {
-    return selectedSetup != null ? '$name (${selectedSetup}°)' : name;
+    return selectedSetup != null ? '$name ($selectedSetup°)' : name;
   }
 }

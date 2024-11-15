@@ -12,7 +12,7 @@ class DraggableItem extends StatelessWidget {
   final Function(Offset) onPositionChanged;
   final VoidCallback onDelete;
 
-  const DraggableItem({
+  const DraggableItem({super.key, 
     required this.data,
     required this.onPositionChanged,
     required this.onDelete,
