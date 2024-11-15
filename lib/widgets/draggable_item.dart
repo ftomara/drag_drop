@@ -1,18 +1,14 @@
+import 'package:drag_drop/model/draggable_item_data.dart';
 import 'package:flutter/material.dart';
 
-class DraggableItemData {
-  Offset position;
-  final String value;
-  final int? id;
-  DraggableItemData({required this.position, required this.value, this.id});
-}
 
 class DraggableItem extends StatelessWidget {
   final DraggableItemData data;
   final Function(Offset) onPositionChanged;
   final VoidCallback onDelete;
 
-  const DraggableItem({super.key, 
+  const DraggableItem({
+    super.key,
     required this.data,
     required this.onPositionChanged,
     required this.onDelete,
@@ -36,7 +32,7 @@ class DraggableItem extends StatelessWidget {
           color: Colors.transparent,
         ),
         child: Center(
-          child: Text(data.value, style: const TextStyle(color: Colors.black)),
+          child: Text(data.machine_name_setup, style: const TextStyle(color: Colors.black)),
         ),
       ),
     );

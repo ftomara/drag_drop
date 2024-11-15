@@ -1,3 +1,5 @@
+import 'package:drag_drop/model/connection.dart';
+import 'package:drag_drop/model/draggable_item_data.dart';
 import 'package:drag_drop/widgets/connection.dart';
 import 'package:flutter/material.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
@@ -8,14 +10,15 @@ import 'draggable_item.dart';
 import 'raws_list.dart';
 
 class MyDropRegion extends StatefulWidget {
-  const MyDropRegion({super.key});
+  MyDropRegion({super.key, this.connections, this.droppedItems});
+  List<DraggableItemData>? droppedItems;
+  List<Connection>? connections;
 
   @override
   _MyDropRegionState createState() => _MyDropRegionState();
 }
 
 class _MyDropRegionState extends State<MyDropRegion> {
-  // List to hold dropped items (widgets and their positions)
   List<DraggableItemData> droppedItems = [];
   final List<RawMatrial> _rawMatrials = [
     RawMatrial(name: 'Aluminum', code: '54321'),
@@ -26,6 +29,18 @@ class _MyDropRegionState extends State<MyDropRegion> {
   List<Connection> connections = [];
   int itemCounter = 0;
   DraggableItemData? selectedItem;
+
+  @override
+  initState() {
+    super.initState();
+    if (widget.connections != null) {
+      connections = widget.connections!;
+    }
+    if (widget.droppedItems != null) {
+      droppedItems = widget.droppedItems!;
+    }
+  }
+
   Future<void> showAreYouSureDialog(DraggableItemData item) async {
     bool? shouldDelete = await showDialog(
       context: context,
@@ -119,7 +134,7 @@ class _MyDropRegionState extends State<MyDropRegion> {
                 droppedItems.add(
                   DraggableItemData(
                     position: localPosition,
-                    value: value,
+                    machine_name_setup: value,
                     id: ++itemCounter,
                   ),
                 );

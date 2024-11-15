@@ -53,18 +53,41 @@ class _RoutmakeingscreenState extends State<Routmakeingscreen> {
                     MediaQuery.of(context).size.height / 11,
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: _machines.map((machine) {
-                    return GestureDetector(
-                      onTap: () {
-                        if (machine.setups != null) {
-                          _showCuttingSetupDialog(machine);
-                        }
-                      },
-                      child: MyDraggableWidget(data: machine),
-                    );
-                  }).toList(),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: _machines.map((machine) {
+                        return GestureDetector(
+                          onTap: () {
+                            if (machine.setups != null) {
+                              _showCuttingSetupDialog(machine);
+                            }
+                          },
+                          child: MyDraggableWidget(data: machine),
+                        );
+                      }).toList(),
+                    ),
+                    Positioned(
+                      right: 60,
+                      top: 20,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF3E3E3E),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                10), // Adjust the radius as needed
+                          ),
+                        ),
+                        child: const Text(
+                          'Save',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ],
             ),

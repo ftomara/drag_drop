@@ -1,12 +1,8 @@
+import 'package:drag_drop/model/connection.dart';
+import 'package:drag_drop/model/draggable_item_data.dart';
 import 'package:drag_drop/widgets/draggable_item.dart';
 import 'package:flutter/material.dart';
 
-class Connection {
-  final int startId;
-  final int endId;
-
-  Connection({required this.startId, required this.endId});
-}
 
 class LinePainter extends CustomPainter {
   final List<Connection> connections;
