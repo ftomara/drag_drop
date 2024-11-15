@@ -1,3 +1,4 @@
+import 'package:drag_drop/widgets/connection.dart';
 import 'package:flutter/material.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
@@ -20,6 +21,9 @@ class _MyDropRegionState extends State<MyDropRegion> {
     RawMatrial(name: 'Steel', code: '93274'),
     RawMatrial(name: 'Titanium', code: '373499'),
   ];
+  List<Connection> connections = [];
+  int itemCounter = 0;
+  DraggableItemData? selectedItem;
   Future<void> showAreYouSureDialog(DraggableItemData item) async {
     bool? shouldDelete = await showDialog(
       context: context,
@@ -73,8 +77,16 @@ class _MyDropRegionState extends State<MyDropRegion> {
     if (shouldDelete == true) {
       setState(() {
         droppedItems.remove(item);
+        connections.removeWhere((connection) =>
+            connection.startId == item.id || connection.endId == item.id);
       });
     }
+  }
+
+  void addConnection(int startId, int endId) {
+    setState(() {
+      connections.add(Connection(startId: startId, endId: endId));
+    });
   }
 
   @override
@@ -106,6 +118,7 @@ class _MyDropRegionState extends State<MyDropRegion> {
                   DraggableItemData(
                     position: localPosition,
                     value: value,
+                    id: ++itemCounter,
                   ),
                 );
               });
@@ -125,6 +138,11 @@ class _MyDropRegionState extends State<MyDropRegion> {
               painter: DottedPainter(),
               size: Size(width, height),
             ),
+            CustomPaint(
+              painter:
+                  LinePainter(connections: connections, items: droppedItems),
+              size: Size(width, height),
+            ),
             Container(
               margin: const EdgeInsets.only(top: 100, left: 50),
               width: 200,
@@ -134,14 +152,26 @@ class _MyDropRegionState extends State<MyDropRegion> {
               Positioned(
                 left: item.position.dx,
                 top: item.position.dy,
-                child: DraggableItem(
-                  data: item,
-                  onPositionChanged: (newPosition) {
-                    setState(() {
-                      item.position = newPosition;
-                    });
+                child: GestureDetector(
+                  onTap: () {
+                    if (selectedItem == null) {
+                      selectedItem = item;
+                    } else {
+                      if (selectedItem!.id != item.id) {
+                        addConnection(selectedItem!.id!, item.id!);
+                      }
+                      selectedItem = null;
+                    }
                   },
-                  onDelete: () => showAreYouSureDialog(item),
+                  child: DraggableItem(
+                    data: item,
+                    onPositionChanged: (newPosition) {
+                      setState(() {
+                        item.position = newPosition;
+                      });
+                    },
+                    onDelete: () => showAreYouSureDialog(item),
+                  ),
                 ),
               ),
           ],

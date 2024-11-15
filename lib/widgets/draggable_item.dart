@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class DraggableItemData {
   Offset position;
   final String value;
-
-  DraggableItemData({required this.position, required this.value});
+  final int? id;
+  DraggableItemData({required this.position, required this.value, this.id});
 }
 
 class DraggableItem extends StatelessWidget {
